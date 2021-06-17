@@ -1,22 +1,31 @@
-Role Name
+Ansible Role: GrayLog Server
 =========
 
-A brief description of the role goes here.
+Эта роль установит GrayLog Server версии 4.0 на CentOS 7.
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+None.
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+Доступные переменные перечислены ниже вместе со значениями по умолчанию (см. `defaults/main.yml`).
+
+Установите свои значения пароля для кластера Graylog
+  - graylog_password_secret: sbTFvW1eaXa1xJ29UqIuoU9r6e8V3d9r
+
+И хеш-пароль для пользователя root для регистрации в веб-интерфейсе Graylog (получить его можно командой: echo -n guinguin | sha256sum)
+  - graylog_root_password_sha2: e50cd08ec046bc5fc0a4ca84c9b06eb6293787bd5e8eac73da95de6b38a16be9
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+Также необходимо открыть следующие порты в firewall
+  - service: http
+  - port: 1514/udp
+  - port: 9996/udp
 
 Example Playbook
 ----------------
@@ -25,7 +34,7 @@ Including an example of how to use your role (for instance, with variables passe
 
     - hosts: servers
       roles:
-         - { role: username.rolename, x: 42 }
+         - graylog
 
 License
 -------
@@ -35,4 +44,4 @@ BSD
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+Chubik Sergey, chubik@ekaterinburg.fsin.uis.
