@@ -1,0 +1,17 @@
+---
+# handlers file for graylog
+- name: reload systemd configuration
+  systemd:
+    daemon_reload: true
+
+- name: restart service elasticsearch
+  service:
+    name: elasticsearch
+    state: restarted
+    enabled: yes
+
+- name: restart service graylog-server
+  service:
+    name: graylog-server
+    state: restarted
+    enabled: yes

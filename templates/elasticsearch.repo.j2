@@ -1,0 +1,8 @@
+[elasticsearch-{{ graylog_es_repo_version }}]
+name=Elasticsearch repository for {{ graylog_es_repo_version }} packages
+baseurl={{ graylog_es_repo }}
+gpgcheck=1
+gpgkey={{ graylog_es_key }}
+enabled=1
+autorefresh=1
+type=rpm-md

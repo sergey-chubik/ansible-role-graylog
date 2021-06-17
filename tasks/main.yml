@@ -1,0 +1,65 @@
+---
+# tasks file for graylog
+- name: graylog | Install packages java pwgen
+  yum:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - "{{ graylog_packages_pwgen }}"
+    - "{{ graylog_packages_java }}"
+
+- name: graylog | Elasticsearch repo updated
+  yum_repository:
+    name: elasticsearch
+    description: "Elasticsearch repository for {{ graylog_elasticsearch_repo_version }} packages"
+    baseurl: "{{ graylog_elasticsearch_repo }}"
+    gpgkey: "{{ graylog_elasticsearch_key }}"
+    gpgcheck: yes
+    enabled: yes
+
+- name: graylog | Install elasticsearch
+  yum:
+    name: elasticsearch-oss
+    state: present
+  notify: restart service elasticsearch
+
+- name: graylog | Elasticsearch edit configuration file
+  template:
+    src: "{{ graylog_template_path }}/elasticsearch.yml.j2"
+    dest: /etc/elasticsearch/elasticsearch.yml
+    owner: root
+    group: elasticsearch
+    mode: 0660
+  notify:
+    - reload systemd configuration
+    - restart service elasticsearch
+
+- name: graylog | Jvm edit configuration file
+  template:
+    src: "{{ graylog_template_path }}/jvm.options.j2"
+    dest: /etc/elasticsearch/jvm.options
+    owner: root
+    group: elasticsearch
+    mode: 0660
+  notify: restart service elasticsearch
+
+- name: graylog | Graylog repo updated
+  yum:
+    name: "{{ graylog_yum_rpm_url }}"
+    state: present
+    update_cache: true
+    disable_gpg_check: true
+
+- name: graylog | Install Graylog server
+  yum:
+    name: graylog-server
+    state: present
+
+- name: graylog | Graylog server edit configuration file
+  template:
+    src: "{{ graylog_template_path }}/graylog.server.conf.j2"
+    dest: /etc/graylog/server/server.conf
+    owner: graylog
+    group: graylog
+    mode: 0644
+  notify: restart service graylog-server
