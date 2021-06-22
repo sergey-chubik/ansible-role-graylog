@@ -47,7 +47,6 @@
   yum:
     name: "{{ graylog_yum_rpm_url }}"
     state: present
-    update_cache: true
     disable_gpg_check: true
 
 - name: graylog | Install Graylog server
